@@ -3,38 +3,92 @@
   <h1>UrMail — Autonomous Email Operations System (AEOS)</h1>
   <p><em>AI-powered intelligent email operations, triage, and automated response platform.</em></p>
 </div>
+Built with **FastAPI** · **Gemini AI** · **ChromaDB** · **React** · **Vite**
 
 ---
 
-## 🧠 Overview
+## ✨ What is UrMail?
 
-UrMail is an advanced, production-ready Autonomous Email Operations Agent designed to reduce human email workload by 60–80%. It ingests communications, semantically understands their context, and autonomously handles repetitive support, sales, and internal routing.
+UrMail is an autonomous email operations agent that leverages AI to:
 
-When an email arrives, UrMail's intelligence pipeline automatically:
-1. **Classifies** the email into categories (Support, Sales, Personal, Spam).
-2. **Prioritizes** the urgency by extracting crucial deadlines and emotional tone.
-3. Retrieves relevant context from your **RAG (Retrieval-Augmented Generation) Knowledge Base**.
-4. Drafts a highly contextual **Suggested Reply**.
-5. Runs a **Decision Engine** to determine whether to *Auto-Reply*, *Suggest a Draft*, or *Escalate* to a human agent based on dynamic confidence scores.
+- **Classify** incoming emails (Support / Sales / Personal / Spam)
+- **Prioritize** based on urgency, sender importance, and context
+- **Generate summaries** and extract action items
+- **Retrieve knowledge** from uploaded documents (RAG/vector search)
+- **Auto-reply** with grounded, accurate responses
+- **Decide** whether to auto-send, suggest edits, or escalate to humans
+- **Learn** from human corrections over time
 
-## ✨ Features
+---
 
-- **Executive Dashboard**: Real-time statistical monitoring of AI automation efficiency and recent automated actions.
-- **Smart Inbox**: An advanced "Focus Blade" style workspace that filters by AI status, priorities, and semantic content natively. 
-- **AI Intelligence Pane**: Deep-dive into exactly *why* the AI made a decision—complete with extracted Action Items, reasoning context, pipeline logging, and confidence scoring.
-- **Agentic Knowledge Base**: Drag-and-drop ingestion of `.pdf`, `.txt`, and `.docx` files directly into the RAG vector store to heavily guardrail the AI's generated knowledge.
-- **Stitch "Lumina Nocturne" Design System**: A stunning, ultra-premium glassmorphic front-end UI.
+## 🏗️ System Architecture
 
-## 🏗️ Architecture
+```
+┌─────────────────────────────────────────────────────────┐
+│                    FRONTEND (React/Vite)                │
+│  Dashboard │ Inbox │ Email Detail │ Knowledge Base      │
+└─────────────────────────────────────────────────────────┘
+                          │ REST API
+┌─────────────────────────────────────────────────────────┐
+│                 BACKEND (FastAPI / Python)               │
+│                                                         │
+│  ┌──────────┐  ┌──────────────┐  ┌─────────────────┐  │
+│  │Classifier│→ │Priority Engine│→ │Summary Generator │  │
+│  └──────────┘  └──────────────┘  └─────────────────┘  │
+│       │                                    │            │
+│       ▼                                    ▼            │
+│  ┌──────────┐  ┌──────────────┐  ┌─────────────────┐  │
+│  │RAG Engine│← │ Vector Store  │← │Document Processor│  │
+│  │(Gemini)  │  │ (ChromaDB)   │  │(PDF/DOCX/TXT)   │  │
+│  └──────────┘  └──────────────┘  └─────────────────┘  │
+│       │                                                 │
+│       ▼                                                 │
+│  ┌──────────────────┐  ┌────────────────┐              │
+│  │ Decision Engine   │→ │ Agent Executor  │              │
+│  │(auto/suggest/esc) │  │(action runner)  │              │
+│  └──────────────────┘  └────────────────┘              │
+└─────────────────────────────────────────────────────────┘
+```
 
-**Backend Stack (FastAPI / Python 3.10+)**:
-- Orchestrated workflow leveraging **Google Gemini Models** for high-accuracy reasoning and embeddings.
-- Custom **RAG Pipeline** (`rag_engine.py` & `embedding_service.py`) dynamically chunking and retrieving context.
-- **Decision Engine** providing strict guardrails on autonomous replies.
+---
 
-**Frontend Stack (React / Vite.js)**:
-- Complete integration with **Tailwind CSS v3** via PostCSS for reactive "Lumina Nocturne" styling.
-- Responsive layout with custom component routing (`react-router-dom`).
+## 🎯 Core Features
+
+### 1. Email Processing Pipeline
+- **Classification** → Support / Sales / Personal / Spam (Gemini + heuristic fallback)
+- **Priority Scoring** → High / Medium / Low with explanations
+- **Conversation Intelligence** → Summary + action items
+
+### 2. Knowledge Base (RAG System)
+- Upload documents (.txt, .pdf, .docx)
+- Automatic text extraction, cleaning, and chunking
+- Vector embeddings via Gemini `text-embedding-004`
+- Similarity search with ChromaDB
+- Grounded response generation — no hallucinations
+
+### 3. Decision Engine
+| Confidence | KB Match | Action |
+|---|---|---|
+| > 0.9 | ✅ Yes | **AUTO_REPLY** |
+| 0.6 – 0.9 | Any | **SUGGEST_REPLY** |
+| < 0.6 | Any | **ESCALATE** |
+
+Special rules:
+- **Spam** → always auto-handled
+- **Personal** → always suggested
+- **High priority + no KB** → escalated
+
+### 4. Subscription Tiers
+| Tier | KBs/Month | Active Days |
+|---|---|---|
+| Free | 1 | 7 days |
+| Pro | 5 | 30 days |
+| Elite | 10 | 30 days |
+
+### 5. Learning from Corrections
+When users edit a suggested reply:
+- Original + corrected version stored
+- Used as improved templates for similar future emails
 
 ---
 
