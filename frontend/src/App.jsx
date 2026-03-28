@@ -5,6 +5,11 @@ import Dashboard from './pages/Dashboard';
 import Inbox from './pages/Inbox';
 import EmailDetail from './pages/EmailDetail';
 import KnowledgeBase from './pages/KnowledgeBase';
+import Compose from './pages/Compose';
+import Spam from './pages/Spam';
+import Settings from './pages/Settings';
+import Profile from './pages/Profile';
+import Upgrade from './pages/Upgrade';
 import { ToastProvider } from './components/Toast';
 
 function App() {
@@ -20,6 +25,11 @@ function App() {
               <Route path="/inbox" element={<Inbox />} />
               <Route path="/email/:id" element={<EmailDetail />} />
               <Route path="/kb" element={<KnowledgeBase />} />
+              <Route path="/compose" element={<Compose />} />
+              <Route path="/spam" element={<Spam />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/upgrade" element={<Upgrade />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </div>
